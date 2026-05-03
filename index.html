@@ -2,20 +2,24 @@
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 .app { max-width: 720px; margin: 0 auto; padding: 1.5rem 1rem 3rem; font-family: var(--font-sans); }
-.header { text-align: center; padding: 2rem 0 1.5rem; border-bottom: 0.5px solid var(--color-border-tertiary); margin-bottom: 2rem; }
+.header { text-align: center; padding: 2rem 0 1.5rem; border-bottom: 0.5px solid var(--color-border-tertiary); margin-bottom: 1.5rem; }
 .badge { display: inline-block; background: #E6F1FB; color: #0C447C; font-size: 12px; font-weight: 500; padding: 4px 14px; border-radius: 20px; margin-bottom: 10px; }
 .header h1 { font-size: 22px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 6px; }
 .header p { font-size: 14px; color: var(--color-text-secondary); }
-.save-bar { display: flex; align-items: center; justify-content: space-between; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 8px 14px; margin-bottom: 1.5rem; font-size: 12px; color: var(--color-text-secondary); }
-.save-status { display: flex; align-items: center; gap: 6px; }
-.save-dot { width: 7px; height: 7px; border-radius: 50%; background: #97C459; }
-.save-dot.saving { background: #EF9F27; }
-.save-dot.error { background: #E24B4A; }
-.save-actions { display: flex; gap: 8px; }
-.save-btn { font-size: 12px; padding: 4px 10px; border-radius: 6px; border: 0.5px solid var(--color-border-secondary); background: var(--color-background-primary); color: var(--color-text-primary); cursor: pointer; font-family: var(--font-sans); }
-.save-btn:hover { background: var(--color-background-secondary); }
-.save-btn.danger { color: #A32D2D; border-color: #F09595; }
-.save-btn.danger:hover { background: #FCEBEB; }
+.save-bar { display: flex; align-items: center; justify-content: space-between; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 10px 14px; margin-bottom: 1.5rem; gap: 10px; flex-wrap: wrap; }
+.save-info { font-size: 13px; color: var(--color-text-secondary); display: flex; align-items: center; gap: 8px; }
+.save-dot { width: 7px; height: 7px; border-radius: 50%; background: #97C459; flex-shrink: 0; }
+.save-actions { display: flex; gap: 8px; align-items: center; }
+.smbtn { font-size: 12px; padding: 5px 12px; border-radius: 6px; border: 0.5px solid var(--color-border-secondary); background: var(--color-background-primary); color: var(--color-text-primary); cursor: pointer; font-family: var(--font-sans); white-space: nowrap; }
+.smbtn:hover { background: var(--color-background-secondary); }
+.smbtn.blue { background: #E6F1FB; color: #0C447C; border-color: #85B7EB; }
+.smbtn.blue:hover { background: #B5D4F4; }
+.smbtn.danger { color: #A32D2D; border-color: #F09595; }
+.smbtn.danger:hover { background: #FCEBEB; }
+.upload-zone { border: 1.5px dashed var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 1.25rem; text-align: center; cursor: pointer; transition: all 0.2s; margin-bottom: 1.5rem; }
+.upload-zone:hover { border-color: #378ADD; background: #E6F1FB; }
+.upload-zone p { font-size: 13px; color: var(--color-text-secondary); margin-top: 6px; }
+.upload-zone strong { font-size: 14px; color: #185FA5; font-weight: 500; }
 .progress-bar { background: var(--color-background-secondary); border-radius: 20px; height: 6px; margin-bottom: 0.5rem; overflow: hidden; }
 .progress-fill { height: 100%; background: #378ADD; border-radius: 20px; transition: width 0.4s ease; }
 .progress-label { font-size: 12px; color: var(--color-text-secondary); text-align: right; margin-bottom: 1.5rem; }
@@ -50,7 +54,7 @@ input::placeholder { color: var(--color-text-secondary); }
 .warn { display: none; font-size: 12px; color: #993C1D; margin-top: 6px; }
 .warn.show { display: block; }
 .ai-box { border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 1rem; margin-bottom: 1rem; background: var(--color-background-secondary); }
-.ai-box-title { font-size: 12px; font-weight: 500; color: #185FA5; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+.ai-title { font-size: 12px; font-weight: 500; color: #185FA5; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
 .ai-content { font-size: 13px; color: var(--color-text-primary); line-height: 1.7; white-space: pre-wrap; }
 .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid #B5D4F4; border-top-color: #378ADD; border-radius: 50%; animation: spin 0.7s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
@@ -68,31 +72,35 @@ input::placeholder { color: var(--color-text-secondary); }
 .proc-badge { background: #FAEEDA; color: #633806; font-size: 12px; padding: 3px 10px; border-radius: 10px; cursor: pointer; border: 0.5px solid #EF9F27; display: inline-block; margin: 3px; }
 .proc-badge:hover { background: #FAC775; }
 .proc-badge.sel { background: #BA7517; color: white; border-color: #BA7517; }
-.resume-card { background: #E6F1FB; border: 0.5px solid #85B7EB; border-radius: var(--border-radius-lg); padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; }
-.resume-title { font-size: 15px; font-weight: 500; color: #042C53; margin-bottom: 6px; }
-.resume-meta { font-size: 13px; color: #185FA5; margin-bottom: 12px; }
-.resume-steps { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
-.resume-step-badge { font-size: 11px; padding: 3px 9px; border-radius: 10px; }
-.resume-step-done { background: #EAF3DE; color: #27500A; border: 0.5px solid #97C459; }
-.resume-step-todo { background: var(--color-background-secondary); color: var(--color-text-secondary); border: 0.5px solid var(--color-border-tertiary); }
+.toast { display: none; position: absolute; top: 0; right: 0; background: #EAF3DE; color: #27500A; border: 0.5px solid #97C459; font-size: 12px; padding: 6px 14px; border-radius: var(--border-radius-md); }
+.toast.show { display: block; }
+.toast.error { background: #FCEBEB; color: #A32D2D; border-color: #F09595; }
 </style>
 
 <div class="app">
   <div class="header">
     <div class="badge">1re STMG — Français</div>
     <h1>Mon commentaire de texte</h1>
-    <p>Construis ton commentaire pas à pas, avec sauvegarde automatique.</p>
+    <p>Construis ton commentaire pas à pas. Sauvegarde ton travail sur ton ordinateur.</p>
   </div>
 
-  <div class="save-bar" id="saveBar">
-    <div class="save-status">
+  <div class="save-bar">
+    <div class="save-info">
       <div class="save-dot" id="saveDot"></div>
-      <span id="saveLabel">Chargement…</span>
+      <span id="saveLabel">Prêt</span>
     </div>
     <div class="save-actions">
-      <button class="save-btn" onclick="manualSave()">Sauvegarder</button>
-      <button class="save-btn danger" onclick="confirmReset()">Effacer mes données</button>
+      <button class="smbtn blue" onclick="exportData()" title="Télécharger ta progression en fichier">Télécharger ma progression</button>
+      <label class="smbtn" style="cursor:pointer;" title="Reprendre depuis un fichier sauvegardé">
+        Reprendre depuis un fichier
+        <input type="file" accept=".json" onchange="importData(event)" style="display:none;">
+      </label>
+      <button class="smbtn danger" onclick="confirmReset()">Effacer</button>
     </div>
+  </div>
+
+  <div style="position:relative;">
+    <div class="toast" id="toast"></div>
   </div>
 
   <div class="progress-bar"><div class="progress-fill" id="pFill" style="width:0%"></div></div>
@@ -104,154 +112,145 @@ input::placeholder { color: var(--color-text-secondary); }
 
 <script>
 const API = "https://api.anthropic.com/v1/messages";
-const STORAGE_KEY = "commentaire_stmg_v3";
+const FILE_VERSION = "stmg-commentaire-v1";
 let D = {};
 let step = 0;
 const TOTAL = 7;
-let saveTimer = null;
 
-const STEP_NAMES = ["Infos de base","Texte à analyser","Premières impressions","Le fond","Les procédés","Le développement","Introduction & conclusion"];
+const STEP_NAMES = ["Infos de base","Texte à analyser","Premières impressions","Le fond","Les procédés","Le développement","Intro & conclusion"];
 const PROCEDES = ["Métaphore","Comparaison","Champ lexical","Répétition","Question rhétorique","Antithèse","Hyperbole","Personnification","Énumération","Gradation","Ironie","Allitération","Oxymore","Anaphore","Périphrase"];
 
-async function storageGet(key) {
-  try { const r = await window.storage.get(key); return r ? JSON.parse(r.value) : null; } catch(e) { return null; }
-}
-async function storageSet(key, val) {
-  try { await window.storage.set(key, JSON.stringify(val)); return true; } catch(e) { return false; }
-}
-async function storageDel(key) {
-  try { await window.storage.delete(key); return true; } catch(e) { return false; }
-}
-
-function setSaveStatus(state, msg) {
-  const dot = document.getElementById('saveDot');
-  const lbl = document.getElementById('saveLabel');
-  if (!dot||!lbl) return;
-  dot.className = 'save-dot' + (state==='saving'?' saving':state==='error'?' error':'');
-  lbl.textContent = msg;
+function showToast(msg, isError=false) {
+  const t = document.getElementById('toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.className = 'toast show' + (isError ? ' error' : '');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 3000);
 }
 
-async function autoSave() {
-  setSaveStatus('saving','Sauvegarde…');
-  const payload = { D, step, savedAt: Date.now() };
-  const ok = await storageSet(STORAGE_KEY, payload);
-  if (ok) {
-    const t = new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
-    setSaveStatus('ok', `Sauvegardé à ${t}`);
-  } else {
-    setSaveStatus('error','Erreur de sauvegarde');
-  }
+function setStatus(msg) {
+  const el = document.getElementById('saveLabel');
+  if (el) el.textContent = msg;
 }
 
-function scheduleSave() {
-  clearTimeout(saveTimer);
-  saveTimer = setTimeout(autoSave, 1500);
+function exportData() {
+  save(step);
+  const payload = { _version: FILE_VERSION, _savedAt: new Date().toISOString(), step, D };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const eleve = (D.eleve || 'eleve').toLowerCase().replace(/\s+/g, '_');
+  const auteur = (D.auteur || 'texte').toLowerCase().replace(/\s+/g, '_').substring(0, 20);
+  a.href = url;
+  a.download = `commentaire_${eleve}_${auteur}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  setStatus('Fichier téléchargé');
+  showToast('Fichier sauvegardé sur ton ordinateur !');
 }
 
-function manualSave() { clearTimeout(saveTimer); autoSave(); }
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const parsed = JSON.parse(e.target.result);
+      if (!parsed._version || !parsed._version.startsWith('stmg-commentaire')) {
+        showToast('Ce fichier ne correspond pas à cet outil.', true); return;
+      }
+      D = parsed.D || {};
+      step = parsed.step || 0;
+      const date = new Date(parsed._savedAt).toLocaleString('fr-FR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+      setStatus(`Reprise du ${date}`);
+      showToast(`Progression de ${D.eleve || 'l\'élève'} chargée !`);
+      document.getElementById('finalView').classList.add('hidden');
+      if (step >= TOTAL) { showFinal(); } else { render(); }
+    } catch(err) {
+      showToast('Fichier invalide ou corrompu.', true);
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
 
-async function confirmReset() {
-  if (!confirm("Effacer toutes tes données ? Cette action est irréversible.")) return;
-  await storageDel(STORAGE_KEY);
+function confirmReset() {
+  if (!confirm('Effacer tout le travail en cours ? Cette action est irréversible.')) return;
   D = {}; step = 0;
   document.getElementById('finalView').classList.add('hidden');
-  setSaveStatus('ok','Données effacées');
+  setStatus('Données effacées');
+  showToast('Nouvelle session démarrée.');
   render();
-}
-
-async function loadSaved() {
-  const saved = await storageGet(STORAGE_KEY);
-  if (saved && saved.D) {
-    D = saved.D;
-    step = saved.step || 0;
-    const t = new Date(saved.savedAt).toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
-    setSaveStatus('ok', `Reprise du ${t}`);
-    if (step === TOTAL) { showFinal(); return; }
-  } else {
-    setSaveStatus('ok','Nouvelle session');
-  }
-  render();
-}
-
-function hookAutoSave() {
-  setTimeout(()=>{
-    document.querySelectorAll('[data-save]').forEach(el => {
-      el.addEventListener('input', ()=>{ D[el.dataset.save]=el.value; scheduleSave(); });
-      el.addEventListener('change', ()=>{ D[el.dataset.save]=el.value; scheduleSave(); });
-    });
-  }, 100);
 }
 
 function buildDots() {
   const el = document.getElementById('dots');
-  if(!el) return;
-  el.innerHTML='';
-  for(let i=0;i<TOTAL;i++){
-    const d=document.createElement('div');
-    d.className='dot'+(i===step?' active':(D['_done'+i]?' done':''));
-    d.textContent=i+1; d.title=STEP_NAMES[i];
-    d.onclick=(function(idx){return function(){if(idx===0||D['_done'+(idx-1)]!==undefined)goTo(idx);};})(i);
+  if (!el) return;
+  el.innerHTML = '';
+  for (let i = 0; i < TOTAL; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i===step?' active':(D['_done'+i]?' done':''));
+    d.textContent = i+1; d.title = STEP_NAMES[i];
+    d.onclick = (function(idx){ return function(){ if(idx===0||D['_done'+(idx-1)]!==undefined) goTo(idx); }; })(i);
     el.appendChild(d);
   }
 }
 
 function updateProg() {
-  const pct=Math.round((step/TOTAL)*100);
-  document.getElementById('pFill').style.width=pct+'%';
-  document.getElementById('pLabel').textContent=`Étape ${step+1} / ${TOTAL}`;
+  const pct = Math.round((step/TOTAL)*100);
+  document.getElementById('pFill').style.width = pct+'%';
+  document.getElementById('pLabel').textContent = `Étape ${step+1} / ${TOTAL}`;
 }
 
 function save(idx) {
-  document.querySelectorAll('[data-save]').forEach(el=>{D[el.dataset.save]=el.value;});
+  document.querySelectorAll('[data-save]').forEach(el => { D[el.dataset.save] = el.value; });
 }
 
 function validate(fields) {
-  let ok=true;
-  fields.forEach(id=>{
-    const el=document.getElementById(id);
-    const w=document.getElementById('w_'+id);
-    if(el&&!el.value.trim()){if(w)w.classList.add('show');ok=false;}
-    else if(w)w.classList.remove('show');
+  let ok = true;
+  fields.forEach(id => {
+    const el = document.getElementById(id);
+    const w = document.getElementById('w_'+id);
+    if (el && !el.value.trim()) { if(w) w.classList.add('show'); ok = false; }
+    else if(w) w.classList.remove('show');
   });
   return ok;
 }
 
-function goTo(idx){save(step);step=idx;render();window.scrollTo({top:0,behavior:'smooth'});}
+function goTo(idx) { save(step); step=idx; render(); window.scrollTo({top:0,behavior:'smooth'}); }
 
-function nextStep(required=[]){
+function nextStep(required=[]) {
   save(step);
-  if(!validate(required))return;
-  D['_done'+step]=true;
-  autoSave();
-  if(step===TOTAL-1){showFinal();return;}
-  step++;render();window.scrollTo({top:0,behavior:'smooth'});
+  if (!validate(required)) return;
+  D['_done'+step] = true;
+  if (step === TOTAL-1) { showFinal(); return; }
+  step++; render(); window.scrollTo({top:0,behavior:'smooth'});
 }
-function prevStep(){save(step);if(step>0){step--;render();window.scrollTo({top:0,behavior:'smooth'});}}
+function prevStep() { save(step); if(step>0){ step--; render(); window.scrollTo({top:0,behavior:'smooth'}); } }
 
-function aiBox(title,content){
-  return `<div class="ai-box"><div class="ai-box-title"><span style="width:8px;height:8px;border-radius:50%;background:#378ADD;display:inline-block;"></span>${title}</div><div class="ai-content">${content}</div></div>`;
-}
-
-async function callAI(system,user,maxTok=700){
-  const r=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:maxTok,system,messages:[{role:"user",content:user}]})});
-  const j=await r.json();
-  return j.content?.[0]?.text||"";
+function aiBox(title, content) {
+  return `<div class="ai-box"><div class="ai-title"><span style="width:8px;height:8px;border-radius:50%;background:#378ADD;display:inline-block;"></span>${title}</div><div class="ai-content">${content}</div></div>`;
 }
 
-function render(){
+async function callAI(system, user, maxTok=700) {
+  const r = await fetch(API, { method:"POST", headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({ model:"claude-sonnet-4-20250514", max_tokens:maxTok, system, messages:[{role:"user",content:user}] })});
+  const j = await r.json();
+  return j.content?.[0]?.text || "";
+}
+
+function render() {
   document.getElementById('finalView').classList.add('hidden');
-  buildDots();updateProg();
-  const fns=[s0,s1,s2,s3,s4,s5,s6];
-  fns[step]();
-  hookAutoSave();
+  buildDots(); updateProg();
+  [s0,s1,s2,s3,s4,s5,s6][step]();
 }
 
-function s0(){
-  document.getElementById('main').innerHTML=`
+function s0() {
+  document.getElementById('main').innerHTML = `
   <div class="card">
     <div class="step-hd"><div class="step-num">1</div><div><div class="step-title">Informations de base</div><div class="step-sub">Renseigne tes coordonnées et les infos sur le texte.</div></div></div>
-    <div class="tip"><strong>Conseil :</strong> Ces informations serviront à mettre en forme ton commentaire final et à l'envoyer à ton professeur. Elles sont sauvegardées automatiquement.</div>
+    <div class="tip"><strong>Rappel :</strong> Pense à télécharger ta progression régulièrement (bouton en haut) pour ne rien perdre. Tu pourras reprendre depuis ce fichier à ta prochaine connexion.</div>
     <div class="field"><label>Ton prénom et nom</label><input type="text" id="eleve" data-save="eleve" value="${D.eleve||''}" placeholder="Ex : Marie Martin"><div class="warn" id="w_eleve">Ce champ est requis.</div></div>
     <div class="field"><label>Ta classe</label><input type="text" id="classe" data-save="classe" value="${D.classe||''}" placeholder="Ex : 1re STMG B"><div class="warn" id="w_classe">Ce champ est requis.</div></div>
     <div class="field"><label>Adresse mail du professeur</label><input type="email" id="prof_mail" data-save="prof_mail" value="${D.prof_mail||''}" placeholder="Ex : professeur@lycee.fr"></div>
@@ -259,26 +258,26 @@ function s0(){
     <div class="field"><label>Titre de l'œuvre</label><input type="text" id="titre" data-save="titre" value="${D.titre||''}" placeholder="Ex : Bel-Ami (1885)"><div class="warn" id="w_titre">Ce champ est requis.</div></div>
     <div class="field"><label>Genre littéraire</label><input type="text" id="genre" data-save="genre" value="${D.genre||''}" placeholder="Ex : Roman réaliste, poème, discours…"></div>
     <div class="btn-row"><button class="btn primary" onclick="nextStep(['eleve','classe','auteur','titre'])">Étape suivante →</button></div>
-  </div>`;}
+  </div>`; }
 
-function s1(){
-  document.getElementById('main').innerHTML=`
+function s1() {
+  document.getElementById('main').innerHTML = `
   <div class="card">
-    <div class="step-hd"><div class="step-num">2</div><div><div class="step-title">Colle le texte à analyser</div><div class="step-sub">Il restera visible à chaque étape et sera sauvegardé.</div></div></div>
-    <div class="tip"><strong>Comment faire ?</strong> Copie-colle le texte de ton prof ici. Plus tu mets de texte, meilleure sera l'analyse automatique. Il sera sauvegardé et disponible à ta prochaine connexion.</div>
+    <div class="step-hd"><div class="step-num">2</div><div><div class="step-title">Colle le texte à analyser</div><div class="step-sub">Il restera visible à chaque étape.</div></div></div>
+    <div class="tip"><strong>Comment faire ?</strong> Copie-colle le texte de ton prof ici. Plus tu mets de texte, meilleure sera l'analyse automatique. N'oublie pas de <strong>télécharger ta progression</strong> après cette étape.</div>
     <div class="field"><label>Texte à analyser</label><textarea id="texte" data-save="texte" rows="10" placeholder="Colle ici le texte intégral ou les extraits principaux…">${D.texte||''}</textarea><div class="warn" id="w_texte">Le texte est requis.</div></div>
     <div class="btn-row">
       <button class="btn" onclick="prevStep()">← Précédent</button>
       <button class="btn primary" onclick="nextStep(['texte'])">Étape suivante →</button>
     </div>
-  </div>`;}
+  </div>`; }
 
-function s2(){
-  document.getElementById('main').innerHTML=`
+function s2() {
+  document.getElementById('main').innerHTML = `
   <div class="card">
     <div class="step-hd"><div class="step-num">3</div><div><div class="step-title">Premières impressions</div><div class="step-sub">Lis le texte sans t'arrêter. Note ce que tu ressens.</div></div></div>
     <div class="tip"><strong>Conseil :</strong> Ne cherche pas encore à tout analyser. Note les mots, images ou phrases qui t'ont frappé(e). Quelle ambiance ? Quelles émotions ?</div>
-    <div class="ex"><div class="ex-lbl">Exemple</div>Le texte donne une impression de tristesse. L'atmosphère est sombre. Une phrase m'a particulièrement touché(e) : "…"</div>
+    <div class="ex"><div class="ex-lbl">Exemple</div>Le texte donne une impression de tristesse. L'atmosphère est sombre. Une phrase m'a touché(e) : "…"</div>
     ${D.texte?`<div style="margin-bottom:1rem;"><div style="font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-bottom:6px;">Rappel du texte :</div><div class="texte-preview">${D.texte}</div></div>`:''}
     <div class="field"><label>Quelles sont tes premières impressions ?</label><textarea id="impressions" data-save="impressions" rows="3" placeholder="Décris librement ce que ce texte t'a fait ressentir…">${D.impressions||''}</textarea><div class="warn" id="w_impressions">Ce champ est requis.</div></div>
     <div class="field"><label>Note 3 à 5 mots ou expressions qui t'ont marqué(e)</label><input type="text" id="mots_cles" data-save="mots_cles" value="${D.mots_cles||''}" placeholder="Ex : silence, obscurité, larmes…"><div class="warn" id="w_mots_cles">Ce champ est requis.</div></div>
@@ -286,74 +285,86 @@ function s2(){
       <button class="btn" onclick="prevStep()">← Précédent</button>
       <button class="btn primary" onclick="nextStep(['impressions','mots_cles'])">Étape suivante →</button>
     </div>
-  </div>`;}
+  </div>`; }
 
-function s3(){
-  document.getElementById('main').innerHTML=`
+function s3() {
+  document.getElementById('main').innerHTML = `
   <div class="card">
     <div class="step-hd"><div class="step-num">4</div><div><div class="step-title">Comprendre le texte — le fond</div><div class="step-sub">Thème, thèse, point de vue de l'auteur.</div></div></div>
     <div class="tip"><strong>La thèse</strong> = l'idée principale que l'auteur veut défendre. Le <strong>thème</strong> = le sujet général. Le <strong>point de vue</strong> = est-il pour ou contre ? Ironique ? Nostalgique ?</div>
-    <div id="aiFondBox">${D.ai_fond?aiBox("Analyse du fond (IA)",D.ai_fond):`<button class="btn primary" onclick="analyserFond()" id="btnFond">Analyser le fond avec l'IA ↗</button><div id="fondSpinner" class="hidden" style="display:flex;align-items:center;gap:8px;padding:8px 0;"><div class="spinner"></div><span style="font-size:13px;color:var(--color-text-secondary);">Analyse en cours…</span></div>`}</div>
+    <div id="aiFondBox">${D.ai_fond ? aiBox("Analyse du fond (IA)", D.ai_fond) : `<button class="btn primary" onclick="analyserFond()" id="btnFond">Analyser le fond avec l'IA ↗</button><div id="fondSpinner" style="display:none;align-items:center;gap:8px;padding:8px 0;"><div class="spinner"></div><span style="font-size:13px;color:var(--color-text-secondary);">Analyse en cours…</span></div>`}</div>
     <div class="field"><label>Quel est le thème principal ?</label><input type="text" id="theme" data-save="theme" value="${D.theme||''}" placeholder="Ex : la liberté, l'injustice sociale…"><div class="warn" id="w_theme">Ce champ est requis.</div></div>
-    <div class="field"><label>Quelle est la thèse (idée principale) de l'auteur ?</label><textarea id="these" data-save="these" rows="3" placeholder="Ex : L'auteur montre que la société du XIXe siècle enfermait les femmes…">${D.these||''}</textarea><div class="warn" id="w_these">Ce champ est requis.</div></div>
-    <div class="field"><label>Quel est le point de vue de l'auteur ?</label><input type="text" id="point_vue" data-save="point_vue" value="${D.point_vue||''}" placeholder="Ex : L'auteur est clairement critique envers la bourgeoisie…"></div>
+    <div class="field"><label>Quelle est la thèse de l'auteur ?</label><textarea id="these" data-save="these" rows="3" placeholder="Ex : L'auteur montre que la société du XIXe siècle enfermait les femmes…">${D.these||''}</textarea><div class="warn" id="w_these">Ce champ est requis.</div></div>
+    <div class="field"><label>Quel est le point de vue de l'auteur ?</label><input type="text" id="point_vue" data-save="point_vue" value="${D.point_vue||''}" placeholder="Ex : critique, ironique, nostalgique…"></div>
     <div class="btn-row">
       <button class="btn" onclick="prevStep()">← Précédent</button>
       <button class="btn primary" onclick="nextStep(['theme','these'])">Étape suivante →</button>
     </div>
-  </div>`;}
+  </div>`; }
 
-async function analyserFond(){
-  document.getElementById('btnFond').classList.add('hidden');
+async function analyserFond() {
+  document.getElementById('btnFond').style.display='none';
   document.getElementById('fondSpinner').style.display='flex';
-  try{
-    const res=await callAI("Tu es un assistant pédagogique pour lycéens français (1re STMG). Réponds en français, simplement pour un lycéen de 16 ans. Sois concis (max 200 mots).",
-      `Voici un texte littéraire :\n\n${D.texte}\n\nIdentifie en 3-4 points : 1) Le thème principal, 2) La thèse ou message de l'auteur, 3) Le point de vue de l'auteur, 4) L'enjeu du texte. Formule des phrases simples.`,500);
-    D.ai_fond=res; scheduleSave();
-    document.getElementById('aiFondBox').innerHTML=aiBox("Analyse du fond (IA)",res);
-  }catch(e){document.getElementById('fondSpinner').style.display='none';document.getElementById('btnFond').classList.remove('hidden');}
+  try {
+    const res = await callAI("Tu es un assistant pédagogique pour lycéens français (1re STMG). Réponds simplement pour un lycéen de 16 ans. Max 200 mots.",
+      `Voici un texte littéraire :\n\n${D.texte}\n\nIdentifie en 3-4 points : 1) Le thème principal, 2) La thèse ou message de l'auteur, 3) Le point de vue de l'auteur, 4) L'enjeu du texte. Formule des phrases simples.`, 500);
+    D.ai_fond = res;
+    document.getElementById('aiFondBox').innerHTML = aiBox("Analyse du fond (IA)", res);
+  } catch(e) { document.getElementById('fondSpinner').style.display='none'; document.getElementById('btnFond').style.display='block'; }
 }
 
-function s4(){
-  const selProc=D.sel_procedes?D.sel_procedes.split(','):[];
-  const badges=PROCEDES.map(p=>`<span class="proc-badge${selProc.includes(p)?' sel':''}" onclick="toggleProc('${p}',this)">${p}</span>`).join('');
-  document.getElementById('main').innerHTML=`
+function s4() {
+  const selProc = D.sel_procedes ? D.sel_procedes.split(',') : [];
+  const badges = PROCEDES.map(p => `<span class="proc-badge${selProc.includes(p)?' sel':''}" onclick="toggleProc('${p}',this)">${p}</span>`).join('');
+  document.getElementById('main').innerHTML = `
   <div class="card">
-    <div class="step-hd"><div class="step-num">5</div><div><div class="step-title">Analyser la forme — les procédés</div><div class="step-sub">Comment l'auteur écrit-il ? Quels effets cherche-t-il ?</div></div></div>
+    <div class="step-hd"><div class="step-num">5</div><div><div class="step-title">Analyser la forme — les procédés</div><div class="step-sub">Comment l'auteur écrit-il ? Quels effets ?</div></div></div>
     <div class="tip"><strong>Les procédés littéraires</strong> sont les outils de l'auteur. Clique sur ceux que tu repères dans le texte, puis explique-les.</div>
-    <div id="aiFormeBox">${D.ai_forme?aiBox("Analyse des procédés (IA)",D.ai_forme):`<button class="btn primary" onclick="analyserForme()" id="btnForme">Repérer les procédés avec l'IA ↗</button><div id="formeSpinner" class="hidden" style="display:flex;align-items:center;gap:8px;padding:8px 0;"><div class="spinner"></div><span style="font-size:13px;color:var(--color-text-secondary);">Analyse en cours…</span></div>`}</div>
-    <div class="field"><label>Procédés identifiés dans le texte (clique pour sélectionner)</label><div id="procBadges" style="margin-top:6px;">${badges}</div></div>
-    <div class="field"><label>Explique 2 ou 3 procédés et leur effet</label><textarea id="procedes" data-save="procedes" rows="4" placeholder="Ex : L'auteur utilise un champ lexical de la noirceur… ce qui crée…">${D.procedes||''}</textarea><div class="warn" id="w_procedes">Ce champ est requis.</div></div>
+    <div id="aiFormeBox">${D.ai_forme ? aiBox("Analyse des procédés (IA)", D.ai_forme) : `<button class="btn primary" onclick="analyserForme()" id="btnForme">Repérer les procédés avec l'IA ↗</button><div id="formeSpinner" style="display:none;align-items:center;gap:8px;padding:8px 0;"><div class="spinner"></div><span style="font-size:13px;color:var(--color-text-secondary);">Analyse en cours…</span></div>`}</div>
+    <div class="field"><label>Procédés identifiés (clique pour sélectionner)</label><div style="margin-top:6px;">${badges}</div></div>
+    <div class="field"><label>Explique 2 ou 3 procédés et leur effet sur le lecteur</label><textarea id="procedes" data-save="procedes" rows="4" placeholder="Ex : L'auteur utilise un champ lexical de la noirceur… ce qui crée…">${D.procedes||''}</textarea><div class="warn" id="w_procedes">Ce champ est requis.</div></div>
     <div class="field"><label>Registre dominant du texte</label><input type="text" id="registre" data-save="registre" value="${D.registre||''}" placeholder="Ex : registre lyrique et tragique…"></div>
     <div class="btn-row">
       <button class="btn" onclick="prevStep()">← Précédent</button>
       <button class="btn primary" onclick="nextStep(['procedes'])">Étape suivante →</button>
     </div>
-  </div>`;}
+  </div>`; }
 
-function toggleProc(name,el){
+function toggleProc(name, el) {
   el.classList.toggle('sel');
-  D.sel_procedes=Array.from(document.querySelectorAll('.proc-badge.sel')).map(b=>b.textContent).join(',');
-  scheduleSave();
+  D.sel_procedes = Array.from(document.querySelectorAll('.proc-badge.sel')).map(b=>b.textContent).join(',');
 }
 
-async function analyserForme(){
-  document.getElementById('btnForme').classList.add('hidden');
+async function analyserForme() {
+  document.getElementById('btnForme').style.display='none';
   document.getElementById('formeSpinner').style.display='flex';
-  try{
-    const res=await callAI("Tu es un assistant pédagogique pour lycéens français (1re STMG). Réponds simplement pour un lycéen de 16 ans. Sois concis (max 220 mots).",
-      `Voici un texte littéraire :\n\n${D.texte}\n\nIdentifie 3 ou 4 procédés littéraires. Pour chacun : nomme le procédé, cite un court extrait, explique l'effet en une phrase simple.`,550);
-    D.ai_forme=res; scheduleSave();
-    document.getElementById('aiFormeBox').innerHTML=aiBox("Analyse des procédés (IA)",res);
-  }catch(e){document.getElementById('formeSpinner').style.display='none';document.getElementById('btnForme').classList.remove('hidden');}
+  try {
+    const res = await callAI("Tu es un assistant pédagogique pour lycéens français (1re STMG). Réponds simplement. Max 220 mots.",
+      `Voici un texte littéraire :\n\n${D.texte}\n\nIdentifie 3 ou 4 procédés littéraires. Pour chacun : nomme le procédé, cite un court extrait, explique l'effet en une phrase simple.`, 550);
+    D.ai_forme = res;
+    document.getElementById('aiFormeBox').innerHTML = aiBox("Analyse des procédés (IA)", res);
+  } catch(e) { document.getElementById('formeSpinner').style.display='none'; document.getElementById('btnForme').style.display='block'; }
 }
 
-function s5(){
-  document.getElementById('main').innerHTML=`
+function sousPart(label, pillClass, prefix) {
+  return `<div class="sous-partie">
+    <div class="sous-titre"><span class="pill ${pillClass}">${label}</span> Sous-partie ${label}</div>
+    <div class="sub-lbl">Idée directrice</div>
+    <textarea id="${prefix}_idee" data-save="${prefix}_idee" rows="2" placeholder="Ce que tu veux montrer dans cette partie…">${D[prefix+'_idee']||''}</textarea>
+    <div class="warn" id="w_${prefix}_idee">Ce champ est requis.</div>
+    <div class="sub-lbl">Citation ou exemple du texte</div>
+    <textarea id="${prefix}_cite" data-save="${prefix}_cite" rows="2" placeholder='Ex : « … » (ligne X)'>${D[prefix+'_cite']||''}</textarea>
+    <div class="sub-lbl">Analyse et effet produit sur le lecteur</div>
+    <textarea id="${prefix}_analyse" data-save="${prefix}_analyse" rows="2" placeholder="Ce procédé crée un effet de… et permet à l'auteur de…">${D[prefix+'_analyse']||''}</textarea>
+  </div>`;
+}
+
+function s5() {
+  document.getElementById('main').innerHTML = `
   <div class="card">
     <div class="step-hd"><div class="step-num">6</div><div><div class="step-title">Le développement — plan et rédaction</div><div class="step-sub">2 axes, chacun avec 2 sous-parties rédigées.</div></div></div>
     <div class="tip"><strong>Axe 1</strong> → le fond : qu'est-ce que le texte dit ? <strong>Axe 2</strong> → la forme : comment le dit-il ? Chaque sous-partie = idée + citation + analyse de l'effet.</div>
-    <div id="aiPlanBox">${D.ai_plan?aiBox("Plan suggéré par l'IA",D.ai_plan):`<button class="btn primary" onclick="genPlan()" id="btnPlan">Générer un plan avec l'IA ↗</button><div id="planSpinner" class="hidden" style="display:flex;align-items:center;gap:8px;padding:8px 0;"><div class="spinner"></div><span style="font-size:13px;color:var(--color-text-secondary);">Génération du plan…</span></div>`}</div>
+    <div id="aiPlanBox">${D.ai_plan ? aiBox("Plan suggéré par l'IA", D.ai_plan) : `<button class="btn primary" onclick="genPlan()" id="btnPlan">Générer un plan avec l'IA ↗</button><div id="planSpinner" style="display:none;align-items:center;gap:8px;padding:8px 0;"><div class="spinner"></div><span style="font-size:13px;color:var(--color-text-secondary);">Génération du plan…</span></div>`}</div>
     <div style="font-size:14px;font-weight:500;color:var(--color-text-primary);margin:1.25rem 0 0.75rem;">Axe 1</div>
     <div class="field"><label>Titre de l'axe 1</label><input type="text" id="axe1" data-save="axe1" value="${D.axe1||''}" placeholder="Ex : Un texte qui dénonce les inégalités sociales"><div class="warn" id="w_axe1">Ce champ est requis.</div></div>
     ${sousPart('1a','pill-blue','axe1a')}
@@ -366,35 +377,22 @@ function s5(){
       <button class="btn" onclick="prevStep()">← Précédent</button>
       <button class="btn primary" onclick="nextStep(['axe1','axe1a_idee','axe1b_idee','axe2','axe2a_idee','axe2b_idee'])">Étape suivante →</button>
     </div>
-  </div>`;}
+  </div>`; }
 
-function sousPart(label,pillClass,prefix){
-  return `<div class="sous-partie">
-    <div class="sous-titre"><span class="pill ${pillClass}">${label}</span> Sous-partie ${label}</div>
-    <div class="sub-lbl">Idée directrice</div>
-    <textarea id="${prefix}_idee" data-save="${prefix}_idee" rows="2" placeholder="Ce que tu veux montrer dans cette partie…">${D[prefix+'_idee']||''}</textarea>
-    <div class="warn" id="w_${prefix}_idee">Ce champ est requis.</div>
-    <div class="sub-lbl">Citation ou exemple du texte</div>
-    <textarea id="${prefix}_cite" data-save="${prefix}_cite" rows="2" placeholder="Ex : « … » (ligne X)">${D[prefix+'_cite']||''}</textarea>
-    <div class="sub-lbl">Analyse et effet produit sur le lecteur</div>
-    <textarea id="${prefix}_analyse" data-save="${prefix}_analyse" rows="2" placeholder="Ce procédé crée un effet de… et permet à l'auteur de…">${D[prefix+'_analyse']||''}</textarea>
-  </div>`;
-}
-
-async function genPlan(){
-  document.getElementById('btnPlan').classList.add('hidden');
+async function genPlan() {
+  document.getElementById('btnPlan').style.display='none';
   document.getElementById('planSpinner').style.display='flex';
-  try{
-    const ctx=`Texte : ${D.texte||''}\nThème : ${D.theme||''}\nThèse : ${D.these||''}\nProcédés : ${D.procedes||''}`;
-    const res=await callAI("Tu es un assistant pédagogique pour lycéens français (1re STMG). Réponds simplement. Sois concis (max 250 mots).",
-      `Éléments d'analyse :\n${ctx}\n\nPropose un plan détaillé en 2 axes. Pour chaque axe : titre clair, deux sous-parties avec idée directrice et exemple précis tiré du texte (courte citation si possible). Format : Axe 1 : [titre] → 1a : … → 1b : … — Axe 2 : [titre] → 2a : … → 2b : …`,600);
-    D.ai_plan=res; scheduleSave();
-    document.getElementById('aiPlanBox').innerHTML=aiBox("Plan suggéré par l'IA",res);
-  }catch(e){document.getElementById('planSpinner').style.display='none';document.getElementById('btnPlan').classList.remove('hidden');}
+  try {
+    const ctx = `Texte : ${D.texte||''}\nThème : ${D.theme||''}\nThèse : ${D.these||''}\nProcédés : ${D.procedes||''}`;
+    const res = await callAI("Tu es un assistant pédagogique pour lycéens français (1re STMG). Réponds simplement. Max 250 mots.",
+      `Éléments d'analyse :\n${ctx}\n\nPropose un plan détaillé en 2 axes. Chaque axe : titre clair + 2 sous-parties avec idée directrice et exemple précis tiré du texte. Format : Axe 1 : [titre] → 1a : … → 1b : … — Axe 2 : [titre] → 2a : … → 2b : …`, 600);
+    D.ai_plan = res;
+    document.getElementById('aiPlanBox').innerHTML = aiBox("Plan suggéré par l'IA", res);
+  } catch(e) { document.getElementById('planSpinner').style.display='none'; document.getElementById('btnPlan').style.display='block'; }
 }
 
-function s6(){
-  document.getElementById('main').innerHTML=`
+function s6() {
+  document.getElementById('main').innerHTML = `
   <div class="card">
     <div class="step-hd"><div class="step-num">7</div><div><div class="step-title">Introduction et conclusion</div><div class="step-sub">L'introduction accroche, la conclusion boucle le tout.</div></div></div>
     <div class="tip"><strong>Introduction (4 phrases) :</strong> 1) Amorce → 2) Présentation du texte → 3) Thèse → 4) Annonce du plan.<br><strong>Conclusion (2-3 phrases) :</strong> Bilan des axes → Ouverture.</div>
@@ -405,37 +403,34 @@ function s6(){
       <button class="btn" onclick="prevStep()">← Précédent</button>
       <button class="btn primary" onclick="nextStep(['intro','conclusion'])">Générer mon commentaire →</button>
     </div>
-  </div>`;}
+  </div>`; }
 
-function buildFinal(){
-  const today=new Date().toLocaleDateString('fr-FR',{year:'numeric',month:'long',day:'numeric'});
-  let t=`${D.eleve||'Élève'}  —  ${D.classe||''}  —  ${today}\n`;
-  t+=`${'═'.repeat(55)}\n\nCOMMENTAIRE DE TEXTE\n`;
-  t+=`${D.auteur||'[auteur]'}, « ${D.titre||'[titre]'} »${D.genre?' — '+D.genre:''}\n\n`;
-  t+=`${'─'.repeat(55)}\nINTRODUCTION\n${'─'.repeat(55)}\n\n${D.intro||''}\n\n`;
-  t+=`${'─'.repeat(55)}\nI. ${D.axe1||'Premier axe'}\n${'─'.repeat(55)}\n\n`;
-  t+=`1. ${D.axe1a_idee||''}\n${D.axe1a_cite?'   Exemple : '+D.axe1a_cite+'\n':''}${D.axe1a_analyse?'   → '+D.axe1a_analyse+'\n':''}\n`;
-  t+=`2. ${D.axe1b_idee||''}\n${D.axe1b_cite?'   Exemple : '+D.axe1b_cite+'\n':''}${D.axe1b_analyse?'   → '+D.axe1b_analyse+'\n':''}\n`;
-  t+=`${'─'.repeat(55)}\nII. ${D.axe2||'Deuxième axe'}\n${'─'.repeat(55)}\n\n`;
-  t+=`1. ${D.axe2a_idee||''}\n${D.axe2a_cite?'   Exemple : '+D.axe2a_cite+'\n':''}${D.axe2a_analyse?'   → '+D.axe2a_analyse+'\n':''}\n`;
-  t+=`2. ${D.axe2b_idee||''}\n${D.axe2b_cite?'   Exemple : '+D.axe2b_cite+'\n':''}${D.axe2b_analyse?'   → '+D.axe2b_analyse+'\n':''}\n`;
-  t+=`${'─'.repeat(55)}\nCONCLUSION\n${'─'.repeat(55)}\n\n${D.conclusion||''}\n`;
+function buildFinal() {
+  const today = new Date().toLocaleDateString('fr-FR',{year:'numeric',month:'long',day:'numeric'});
+  let t = `${D.eleve||'Élève'}  —  ${D.classe||''}  —  ${today}\n`;
+  t += `${'═'.repeat(55)}\n\nCOMMENTAIRE DE TEXTE\n`;
+  t += `${D.auteur||'[auteur]'}, « ${D.titre||'[titre]'} »${D.genre?' — '+D.genre:''}\n\n`;
+  t += `${'─'.repeat(55)}\nINTRODUCTION\n${'─'.repeat(55)}\n\n${D.intro||''}\n\n`;
+  t += `${'─'.repeat(55)}\nI. ${D.axe1||'Premier axe'}\n${'─'.repeat(55)}\n\n`;
+  t += `1. ${D.axe1a_idee||''}\n${D.axe1a_cite?'   Exemple : '+D.axe1a_cite+'\n':''}${D.axe1a_analyse?'   → '+D.axe1a_analyse+'\n':''}\n`;
+  t += `2. ${D.axe1b_idee||''}\n${D.axe1b_cite?'   Exemple : '+D.axe1b_cite+'\n':''}${D.axe1b_analyse?'   → '+D.axe1b_analyse+'\n':''}\n`;
+  t += `${'─'.repeat(55)}\nII. ${D.axe2||'Deuxième axe'}\n${'─'.repeat(55)}\n\n`;
+  t += `1. ${D.axe2a_idee||''}\n${D.axe2a_cite?'   Exemple : '+D.axe2a_cite+'\n':''}${D.axe2a_analyse?'   → '+D.axe2a_analyse+'\n':''}\n`;
+  t += `2. ${D.axe2b_idee||''}\n${D.axe2b_cite?'   Exemple : '+D.axe2b_cite+'\n':''}${D.axe2b_analyse?'   → '+D.axe2b_analyse+'\n':''}\n`;
+  t += `${'─'.repeat(55)}\nCONCLUSION\n${'─'.repeat(55)}\n\n${D.conclusion||''}\n`;
   return t;
 }
 
-function showFinal(){
-  save(step); D['_done'+(TOTAL-1)]=true;
-  step=TOTAL;
-  autoSave();
-  document.getElementById('main').innerHTML='';
-  document.getElementById('pFill').style.width='100%';
-  document.getElementById('pLabel').textContent='Terminé !';
+function showFinal() {
+  save(step); D['_done'+(TOTAL-1)] = true; step = TOTAL;
+  document.getElementById('main').innerHTML = '';
+  document.getElementById('pFill').style.width = '100%';
+  document.getElementById('pLabel').textContent = 'Terminé !';
   buildDots();
-  const txt=buildFinal(); D._finalText=txt;
-  const fv=document.getElementById('finalView');
+  const txt = buildFinal(); D._finalText = txt;
+  const fv = document.getElementById('finalView');
   fv.classList.remove('hidden');
-  const doneParts=STEP_NAMES.map((n,i)=>`<span class="resume-step-badge ${D['_done'+i]?'resume-step-done':'resume-step-todo'}">${i+1}. ${n}</span>`).join('');
-  fv.innerHTML=`
+  fv.innerHTML = `
   <div class="card">
     <div class="step-hd"><div class="step-num" style="background:#EAF3DE;color:#27500A;">✓</div><div><div class="step-title">Ton commentaire est prêt !</div><div class="step-sub">Copie-le, imprime-le ou envoie-le à ton professeur.</div></div></div>
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
@@ -445,6 +440,7 @@ function showFinal(){
     <div class="final-area" id="finalTxt">${txt}</div>
     <div class="btn-row" style="margin-top:1.25rem;">
       <button class="btn" onclick="backToEdit()">Modifier</button>
+      <button class="btn" onclick="exportData()">Sauvegarder le fichier</button>
       <button class="btn" onclick="printDoc()">Imprimer</button>
       <button class="btn primary" onclick="copyTxt()">Copier</button>
       <button class="btn success" onclick="sendMail()">${D.prof_mail?'Envoyer au prof →':'Envoyer par mail'}</button>
@@ -452,16 +448,16 @@ function showFinal(){
   </div>
   <div class="card" style="text-align:center;">
     <div style="font-size:13px;color:var(--color-text-secondary);margin-bottom:8px;">Comment tu trouves cet outil ?</div>
-    <div style="display:flex;justify-content:center;gap:4px;" id="stars">
+    <div style="display:flex;justify-content:center;gap:4px;">
       ${[1,2,3,4,5].map(n=>`<span style="font-size:22px;cursor:pointer;color:var(--color-text-secondary);" onclick="rateStar(${n})" id="star${n}">★</span>`).join('')}
     </div>
-  </div>`;}
+  </div>`; }
 
-function backToEdit(){ step=TOTAL-1; document.getElementById('finalView').classList.add('hidden'); render(); }
-function copyTxt(){ navigator.clipboard.writeText(D._finalText||'').then(()=>{const b=document.getElementById('copiedBadge');b.classList.add('show');setTimeout(()=>b.classList.remove('show'),2500);}); }
-function printDoc(){ const w=window.open('','_blank'); w.document.write(`<html><head><title>Commentaire</title><style>body{font-family:Arial,sans-serif;font-size:13px;line-height:1.9;white-space:pre-wrap;max-width:700px;margin:2cm auto;}@media print{body{margin:1cm;}}</style></head><body>${D._finalText||''}</body></html>`); w.document.close();w.focus();setTimeout(()=>w.print(),400); }
-function sendMail(){ const sub=encodeURIComponent(`Commentaire — ${D.eleve||'Élève'} — ${D.auteur||''}`); const body=encodeURIComponent(D._finalText||''); window.open(`mailto:${D.prof_mail||''}?subject=${sub}&body=${body}`); }
-function rateStar(n){ for(let i=1;i<=5;i++){const s=document.getElementById('star'+i);if(s)s.style.color=i<=n?'#EF9F27':'var(--color-text-secondary)';} }
+function backToEdit() { step=TOTAL-1; document.getElementById('finalView').classList.add('hidden'); render(); }
+function copyTxt() { navigator.clipboard.writeText(D._finalText||'').then(()=>{ const b=document.getElementById('copiedBadge'); b.classList.add('show'); setTimeout(()=>b.classList.remove('show'),2500); }); }
+function printDoc() { const w=window.open('','_blank'); w.document.write(`<html><head><title>Commentaire</title><style>body{font-family:Arial,sans-serif;font-size:13px;line-height:1.9;white-space:pre-wrap;max-width:700px;margin:2cm auto;}@media print{body{margin:1cm;}}</style></head><body>${D._finalText||''}</body></html>`); w.document.close(); w.focus(); setTimeout(()=>w.print(),400); }
+function sendMail() { const sub=encodeURIComponent(`Commentaire — ${D.eleve||'Élève'} — ${D.auteur||''}`); const body=encodeURIComponent(D._finalText||''); window.open(`mailto:${D.prof_mail||''}?subject=${sub}&body=${body}`); }
+function rateStar(n) { for(let i=1;i<=5;i++){const s=document.getElementById('star'+i);if(s)s.style.color=i<=n?'#EF9F27':'var(--color-text-secondary)';} }
 
-loadSaved();
+render();
 </script>
